@@ -58,7 +58,7 @@ export const filteredProjects = derived(
         return $projects.filter(project => {
             const matchesSearch = project.name.toLowerCase().includes($searchTerm.toLowerCase()) ||
                 project.descriptionShort.toLowerCase().includes($searchTerm.toLowerCase());
-            const matchesSector = $selectedSector ? project.profileSector.name === $selectedSector : true;
+            const matchesSector = $selectedSector ? project.profileSector?.name === $selectedSector : true;
             const matchesStatus = $selectedStatus ? project.profileStatus.name === $selectedStatus : true;
             const matchesNetwork = $selectedNetwork ? project.products.some(p => p.productDeployedOnProduct.name === $selectedNetwork) : true;
 

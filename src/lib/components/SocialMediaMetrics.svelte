@@ -17,7 +17,7 @@
     function calculateSocialScore() {
         socialScore = socials.reduce((score, social) => {
             // This is a placeholder calculation. Adjust weights as needed.
-            const followerScore = social.followers
+            const followerScore = social?.followers
                 ? Math.log(social.followers) * 10
                 : 0;
             return score + followerScore;
@@ -27,7 +27,7 @@
     function findTopPlatform() {
         topPlatform = socials.reduce(
             (top, current) => {
-                return current.followers > top.followers ? current : top;
+                return current?.followers > top?.followers ? current : top;
             },
             { name: "", followers: 0 },
         );
@@ -40,7 +40,7 @@
         new Chart(ctx, {
             type: "bar",
             data: {
-                labels: socials.map((s) => s.socialType.name),
+                labels: socials.map((s) => s?.socialType?.name),
                 datasets: [
                     {
                         label: "Followers",

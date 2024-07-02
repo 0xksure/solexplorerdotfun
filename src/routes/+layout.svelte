@@ -28,19 +28,12 @@
         wallets = walletsMap;
         await loadProjects();
     });
-
-    $: showFilters =
-        $page.url.pathname === "/analysis" ||
-        $page.url.pathname === "/projects";
 </script>
 
 <WalletProvider {localStorageKey} {wallets} autoConnect />
 <Navbar />
 
 <main>
-    {#if showFilters}
-        <SearchFilters />
-    {/if}
     <slot />
 </main>
 

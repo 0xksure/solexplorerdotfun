@@ -1,14 +1,23 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import { projects, filteredProjects } from "$lib/stores/projectData";
+    import {
+        projects,
+        filteredProjects,
+        loadProjects,
+    } from "$lib/stores/projectData";
+    import { showFilters } from "$lib/stores/uiState";
+
     import ProjectsOverTimeChart from "$lib/components/ProjectsOverTimeChart.svelte";
     import SocialMediaMetrics from "$lib/components/SocialMediaMetrics.svelte";
+    import SearchFilters from "$lib/components/SearchFilters.svelte";
 
     onMount(async () => {
         // Load projects if not already loaded
         if ($projects.length === 0) {
             await loadProjects();
         }
+        showFilters.set(true);
+        return () => showFilters.set(false);
     });
 </script>
 
@@ -17,6 +26,7 @@
 </svelte:head>
 
 <h1>Project Analysis</h1>
+<SearchFilters />
 
 <section class="card">
     <h2>Projects Over Time</h2>

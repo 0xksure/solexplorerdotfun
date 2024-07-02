@@ -5,12 +5,17 @@
         filteredProjects,
         loadProjects,
     } from "$lib/stores/projectData";
+    import { showFilters } from "$lib/stores/uiState";
+
     import ProjectCard from "$lib/components/ProjectCard.svelte";
+    import SearchFilters from "$lib/components/SearchFilters.svelte";
 
     onMount(async () => {
         if ($projects.length === 0) {
             await loadProjects();
         }
+        showFilters.set(true);
+        return () => showFilters.set(false);
     });
 
     $: projectCount = $filteredProjects.length;
@@ -21,6 +26,7 @@
 </svelte:head>
 
 <h1>Solana Projects</h1>
+<SearchFilters />
 
 <p>Showing {projectCount} projects</p>
 
