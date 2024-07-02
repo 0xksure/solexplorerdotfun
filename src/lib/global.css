@@ -1,0 +1,68 @@
+:root {
+    --background-color: #13151C;
+    --card-background: #1E2128;
+    --text-color: #ffffff;
+    --accent-color-purple: #9945FF;
+    --accent-color-teal: #14F195;
+    --accent-color-blue: #36A2EB;
+}
+
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+}
+
+.gradient-bg {
+    background: linear-gradient(45deg, #13151C, #1E2128);
+}
+
+.button-primary {
+    background-color: var(--accent-color-purple);
+    color: var(--text-color);
+    border: none;
+    border-radius: 24px;
+    padding: 12px 24px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.button-primary:hover {
+    background-color: #8134E0;
+}
+
+.button-secondary {
+    background-color: transparent;
+    color: var(--text-color);
+    border: 1px solid var(--text-color);
+    border-radius: 24px;
+    padding: 12px 24px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.button-secondary:hover {
+    background-color: var(--text-color);
+    color: var(--background-color);
+}
+
+.card {
+    background-color: var(--card-background);
+    border-radius: 8px;
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.highlight {
+    color: var(--accent-color-teal);
+}
+
+.accent-purple {
+    color: var(--accent-color-purple);
+}
+
+.accent-blue {
+    color: var(--accent-color-blue);
+}
