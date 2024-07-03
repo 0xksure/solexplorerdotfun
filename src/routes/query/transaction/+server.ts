@@ -7,7 +7,10 @@ import * as splToken from '@solana/spl-token';
 const USDC_MINT = new web3.PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v');
 const DESTINATION_WALLET = new web3.PublicKey("CNY467c6XURCPjiXiKRLCvxdRf3bpunagYTJpr685gPv");
 export async function POST({ request }) {
-    const RPC_URL = 'https://api.mainnet-beta.solana.com';
+    const RPC_URL = process.env.RPC_URL;
+    if (!RPC_URL) {
+        return json({ error: 'RPC URL is required' }, { status: 400 });
+    }
     try {
         const { fromAddress } = await request.json();
         if (!fromAddress) {
