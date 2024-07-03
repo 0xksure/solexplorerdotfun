@@ -4,7 +4,10 @@
     import { walletStore } from "@svelte-on-solana/wallet-adapter-core";
     import { fade } from "svelte/transition";
     import * as web3 from "@solana/web3.js";
-    import { SignAndSendTransaction } from "$lib/transaction";
+    import {
+        DeserializeTransaction,
+        SignAndSendTransaction,
+    } from "$lib/transaction";
     import ProjectCard from "$lib/components/ProjectCard.svelte";
     import { goto } from "$app/navigation";
     import { page } from "$app/stores";
@@ -59,10 +62,7 @@
                 await txResponse.json();
 
             // Deserialize and sign the transaction
-            const vtx = web3.VersionedTransaction.deserialize(
-                Buffer.from(serializedTx),
-            );
-
+            const vtx = DeserializeTransaction(serializedTx);
             const transactionResult = await SignAndSendTransaction(
                 $walletStore,
                 vtx,

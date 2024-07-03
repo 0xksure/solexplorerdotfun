@@ -36,7 +36,7 @@ export async function POST({ request }) {
                     "content": [
                         {
                             "type": "text",
-                            "text": `Which projects in the description matches the following investment thesis: ${prompt}. Please list the top 3 projects.`
+                            "text": `Which projects in the description matches the following investment thesis: ${prompt}. Please list the top max 5 projects.`
                         }
                     ]
                 }

@@ -44,9 +44,9 @@ export async function POST({ request }) {
         }).compileToV0Message();
 
         const transaction = new web3.VersionedTransaction(messageV0);
-
+        const serializedTx = transaction.serialize().toString();
         return json({
-            transaction: Buffer.from(transaction.serialize()),
+            transaction: serializedTx,
             latestBlockhash: latestBlockhash.blockhash
         });
     } catch (error) {
