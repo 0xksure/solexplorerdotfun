@@ -5,12 +5,14 @@
     let wallets;
     import SearchFilters from "$lib/components/SearchFilters.svelte";
     import "$lib/global.css";
+    import "../app.css";
     import {
         WalletMultiButton,
         WalletProvider,
     } from "@svelte-on-solana/wallet-adapter-ui";
     import { walletStore } from "@svelte-on-solana/wallet-adapter-core";
     import { page } from "$app/stores";
+
     const localStorageKey = "walletAdapter";
     onMount(async () => {
         const {

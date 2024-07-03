@@ -3,7 +3,6 @@ import { error } from '@sveltejs/kit';
 
 // Get the solver account for the given address
 export const POST = (async (event) => {
-
     try {
         const rpcUrl = process.env.RPC_URL
         if (!rpcUrl) throw error(400, 'No rpc url found')

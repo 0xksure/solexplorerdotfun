@@ -1,69 +1,91 @@
 <script lang="ts">
+    import "./../../app.css";
     import { page } from "$app/stores";
     import { WalletMultiButton } from "@svelte-on-solana/wallet-adapter-ui";
-    let isMenuOpen = false;
+    import {
+        Navbar,
+        NavBrand,
+        NavLi,
+        NavUl,
+        NavHamburger,
+        Search,
+        Button,
+    } from "flowbite-svelte";
+    $: activeUrl = $page.url.pathname;
+    let activeClass =
+        " text-white bg-sky-700 md:bg-sky-700 md:bg-transparent md:text-sky-700 md:dark:text-white dark:bg-sky-600 md:dark:bg-transparent";
+    let nonActiveClass =
+        "flex items-center text-slate-800 md:text-slate-300 hover:bg-sky-200 md:hover:bg-transparent md:border-0 md:hover:text-sky-700 dark:text-slate-400 md:dark:hover:text-white dark:hover:bg-green-700 dark:hover:text-white md:dark:hover:bg-transparent";
 
-    function toggleMenu() {
-        isMenuOpen = !isMenuOpen;
-    }
+    let hideNavMenu = true;
+    const onNavHamburgerClick = (toggleFn: () => void) => {
+        toggleFn();
+        hideNavMenu = !hideNavMenu;
+    };
 
-    function closeMenu() {
-        isMenuOpen = false;
-    }
-
-    $: path = $page.url.pathname;
+    const onNavLinkClick = (toggleFn: () => void) => {
+        hideNavMenu = true;
+    };
 </script>
 
 <nav>
-    <div class="nav-container">
-        <a href="/" class="logo">solexplore.fun</a>
-        <button
-            class="menu-toggle"
-            on:click={toggleMenu}
-            aria-label="Toggle menu"
+    <div class="site flex flex-row">
+        <Navbar
+            let:toggle
+            let:NavContainer
+            class="bg-black flex flex-row align-items items-center justify-center "
         >
-            <span class="bar"></span>
-            <span class="bar"></span>
-            <span class="bar"></span>
-        </button>
-        <ul class:active={isMenuOpen}>
-            <li>
-                <a href="/" class:active={path === "/"} on:click={closeMenu}
-                    >Home</a
+            <NavContainer
+                class="flex flex-row md:flex-nowrap gap-2 md:justify-center items-center align-items px-5 py-2 "
+            >
+                <div class="md:hidden">
+                    <WalletMultiButton />
+                </div>
+                <NavHamburger
+                    class="flex flex-row justify-start justify-center"
+                    onClick={() => onNavHamburgerClick(toggle)}
+                />
+                <NavUl
+                    {activeUrl}
+                    {activeClass}
+                    {nonActiveClass}
+                    hidden={hideNavMenu}
+                    ulClass="flex flex-col items-center p-4 gap-2 md:gap-0 mt-4 md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:text-sm md:font-medium"
+                    on:click={() => onNavLinkClick(toggle)}
                 >
-                <a
-                    href="/analysis"
-                    class:active={path === "/analysis"}
-                    on:click={closeMenu}>Analysis</a
-                >
-                <a
-                    href="/projects"
-                    class:active={path === "/projects"}
-                    on:click={closeMenu}>Projects</a
-                >
+                    <NavLi href="/">Home</NavLi>
 
-                <WalletMultiButton />
-            </li>
-        </ul>
+                    <NavLi href="projects">Projects</NavLi>
+                </NavUl>
+                <div
+                    class="flex flex-row gap-3 justify-center items-center hidden md:flex"
+                >
+                    <WalletMultiButton />
+                </div>
+            </NavContainer>
+        </Navbar>
     </div>
 </nav>
 
 <style>
-    nav {
+    .site {
+        background-color: #1a202c;
+    }
+    /* nav {
         background-color: var(--card-background);
         padding: 1rem;
         position: sticky;
         top: 0;
         z-index: 1000;
-    }
+    } */
 
-    .nav-container {
+    /* .nav-container {
         display: flex;
         justify-content: space-between;
         align-items: center;
         max-width: 1200px;
         margin: 0 auto;
-    }
+    } */
 
     .logo {
         color: var(--text-color);
@@ -83,15 +105,15 @@
         margin-left: 1rem;
     }
 
-    a {
+    /* a {
         color: var(--text-color);
         text-decoration: none;
         padding: 0.5rem 1rem;
         border-radius: 4px;
         transition: background-color 0.3s ease;
-    }
+    } */
 
-    a:hover,
+    /* a:hover,
     a.active {
         background-color: var(--accent-color-purple);
     }
@@ -137,5 +159,5 @@
         li {
             margin: 1rem 0;
         }
-    }
+    } */
 </style>

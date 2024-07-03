@@ -2,16 +2,35 @@
     import { projects } from "$lib/stores/projectData";
     import type { WalletStore } from "@svelte-on-solana/wallet-adapter-core";
     import { walletStore } from "@svelte-on-solana/wallet-adapter-core";
-    import { goto } from "$app/navigation";
     import { fade } from "svelte/transition";
     import * as web3 from "@solana/web3.js";
     import { SignAndSendTransaction } from "$lib/transaction";
+    import ProjectCard from "$lib/components/ProjectCard.svelte";
+    import { goto } from "$app/navigation";
+    import { page } from "$app/stores";
+    import { onMount } from "svelte";
 
     let investmentThesis = "";
     let isLoading = false;
     let error = null;
     let success = false;
+    let matchingProjects = [];
+    let copySuccess = false;
 
+    onMount(() => {
+        const urlParams = new URLSearchParams($page.url.search);
+        const prompt = urlParams.get("prompt");
+        const projectsIds = urlParams.get("projects");
+
+        if (prompt && projectsIds) {
+            investmentThesis = decodeURIComponent(prompt);
+            const ids = projectsIds.split(",");
+            matchingProjects = $projects.filter((project) =>
+                ids.includes(project.id.toString()),
+            );
+            success = true;
+        }
+    });
     async function handleSubmit() {
         if (!$walletStore) {
             error = "Please connect your wallet first.";
@@ -21,9 +40,9 @@
         isLoading = true;
         error = null;
         success = false;
+        matchingProjects = [];
 
         try {
-            // First, get the transaction
             const txResponse = await fetch("/query/transaction", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -68,13 +87,16 @@
             const result = await queryResponse.json();
 
             if (queryResponse.ok) {
-                if (result.projectIds && result.projectIds.length > 0) {
+                if (result.projects && result.projects.length > 0) {
                     success = true;
-                    setTimeout(() => {
-                        goto(
-                            "/projects?filtered=" + result.projectIds.join(","),
-                        );
-                    }, 1500);
+                    matchingProjects = result.projects;
+
+                    // Update URL with query parameters
+                    const searchParams = new URLSearchParams({
+                        prompt: encodeURIComponent(investmentThesis),
+                        projects: result.projects.map((p) => p.id).join(","),
+                    });
+                    goto(`?${searchParams.toString()}`, { replaceState: true });
                 } else {
                     error =
                         "No matching projects found for your investment thesis.";
@@ -90,16 +112,28 @@
             isLoading = false;
         }
     }
+
+    function copyLinkToClipboard() {
+        navigator.clipboard.writeText(window.location.href).then(
+            () => {
+                copySuccess = true;
+                setTimeout(() => (copySuccess = false), 3000);
+            },
+            (err) => {
+                console.error("Could not copy text: ", err);
+            },
+        );
+    }
 </script>
 
 <svelte:head>
-    <title></title>
+    <title>Find the Next Gem - Solana Project Compass</title>
 </svelte:head>
 
 <div class="container">
     <div>
-        <h1>Find the next gem</h1>
-        <p>
+        <h1 class="text-2xl">Find the next gem</h1>
+        <p class="text-md text-zinc-400">
             Enter your investment thesis below to find blockchain projects that
             match your thesis. Each query cost 0.5 USDC.
         </p>
@@ -133,19 +167,38 @@
 
     {#if success}
         <div class="success-message" transition:fade>
-            <p>Matching projects found! Redirecting you to the results...</p>
+            <p>
+                Matching projects found! You can share this URL to show your
+                results.
+            </p>
+            <button on:click={copyLinkToClipboard} class="copy-button">
+                {copySuccess ? "Copied!" : "Copy Link"}
+            </button>
+        </div>
+    {/if}
+
+    {#if matchingProjects.length > 0}
+        <div class="matching-projects" transition:fade>
+            <h2>Matching Projects</h2>
+            <div class="project-grid">
+                {#each matchingProjects as project (project.id)}
+                    <ProjectCard {project} />
+                {/each}
+            </div>
         </div>
     {/if}
 </div>
+>
 
 <style>
     .container {
-        max-width: 600px;
+        max-width: 800px;
         margin: 0 auto;
         padding: 2rem;
     }
 
-    h1 {
+    h1,
+    h2 {
         color: var(--text-color);
         text-align: center;
         margin-bottom: 2rem;
@@ -155,6 +208,7 @@
         display: flex;
         flex-direction: column;
         gap: 1rem;
+        margin-bottom: 2rem;
     }
 
     textarea {
@@ -223,5 +277,41 @@
         background-color: rgba(0, 255, 0, 0.1);
         border: 1px solid green;
         color: green;
+    }
+
+    .matching-projects {
+        margin-top: 2rem;
+    }
+
+    .project-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1rem;
+    }
+
+    .success-message {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 1rem;
+        padding: 1rem;
+        border-radius: 4px;
+        background-color: rgba(0, 255, 0, 0.1);
+        border: 1px solid green;
+        color: green;
+    }
+
+    .copy-button {
+        padding: 0.5rem 1rem;
+        background-color: var(--accent-color-purple);
+        color: var(--text-color);
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .copy-button:hover {
+        background-color: var(--accent-color-blue);
     }
 </style>
