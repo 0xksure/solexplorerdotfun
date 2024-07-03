@@ -4,6 +4,8 @@
     import { walletStore } from "@svelte-on-solana/wallet-adapter-core";
     import { fade } from "svelte/transition";
     import * as web3 from "@solana/web3.js";
+    import Anthropic from "$lib/images/anthropic.svg";
+    import TheGrid from "$lib/images/thegrid-logo.svg";
     import {
         DeserializeTransaction,
         SignAndSendTransaction,
@@ -131,21 +133,45 @@
 </svelte:head>
 
 <div class="container">
-    <div>
+    <div class="flex flex-col gap-3">
         <h1 class="text-2xl">Find the next gem with AI</h1>
-        <p class="text-md text-zinc-400">
+        <p class="text-md text-zinc-600">
             Enter your investment thesis below to find blockchain projects that
             match your thesis. Each query cost 0.5 USDC.
         </p>
     </div>
 
     <form on:submit|preventDefault={handleSubmit}>
-        <textarea
-            bind:value={investmentThesis}
-            placeholder="Your investment thesis"
-            rows="4"
-            disabled={isLoading}
-        ></textarea>
+        <div class="flex flex-col gap-0">
+            <textarea
+                bind:value={investmentThesis}
+                placeholder="Your investment thesis"
+                rows="4"
+                disabled={isLoading}
+            ></textarea>
+            <p class="text-sm text-zinc-400">
+                Powered by
+                <a href="https://anthropic.com" target="_blank" rel="noopener">
+                    <img
+                        src={Anthropic}
+                        alt="Anthropic"
+                        class="inline-block h-4 w-4"
+                    />
+                </a>
+                and
+                <a
+                    href="https://docs.thegrid.id/"
+                    target="_blank"
+                    rel="noopener"
+                >
+                    <img
+                        src={TheGrid}
+                        alt="The Grid"
+                        class="inline-block h-12 w-12"
+                    />
+                </a>
+            </p>
+        </div>
         <button type="submit" disabled={isLoading || !investmentThesis.trim()}>
             {#if isLoading}
                 Analyzing...
