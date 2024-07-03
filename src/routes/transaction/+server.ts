@@ -1,3 +1,4 @@
+import { DeserializeTransaction } from '$lib/transaction.js';
 import { Connection, VersionedTransaction } from '@solana/web3.js';
 import { error } from '@sveltejs/kit';
 
@@ -9,7 +10,7 @@ export const POST = (async (event) => {
         const requestBody = await event.request.json()
         const signedVtxBuffer = requestBody.versionedTransactionBuffer;
         if (!signedVtxBuffer) throw error(400, 'No signed vtx found')
-        const signedVtx = VersionedTransaction.deserialize(Buffer.from(signedVtxBuffer));
+        const signedVtx = DeserializeTransaction(signedVtxBuffer);
         const connection = new Connection(rpcUrl, "confirmed");
 
         const signature = await connection.sendTransaction(signedVtx);

@@ -27,7 +27,7 @@ export async function SignAndSendTransaction(
     }
 
     // encode the signed transaction
-    const versionedTransactionBuffer = Buffer.from(signedVtx.serialize());
+    const versionedTransactionBuffer = signedVtx.serialize().toString();
 
     /// make request to /transaction
     const response = await fetch("/transaction", {
