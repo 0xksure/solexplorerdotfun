@@ -127,12 +127,12 @@
 </script>
 
 <svelte:head>
-    <title>Find the Next Gem - Solana Project Compass</title>
+    <title>Find the Next Gem</title>
 </svelte:head>
 
 <div class="container">
     <div>
-        <h1 class="text-2xl">Find the next gem</h1>
+        <h1 class="text-2xl">Find the next gem with AI</h1>
         <p class="text-md text-zinc-400">
             Enter your investment thesis below to find blockchain projects that
             match your thesis. Each query cost 0.5 USDC.
@@ -188,7 +188,6 @@
         </div>
     {/if}
 </div>
->
 
 <style>
     .container {
